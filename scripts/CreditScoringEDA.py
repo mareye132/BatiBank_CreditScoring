@@ -17,9 +17,31 @@ def summary_statistics(data):
     print(data.describe())
 
 # Distribution of numerical features
+
 def plot_numerical_distribution(data, column):
-    data[column].hist(bins=50)
-    plt.title(f'Distribution of {column}')
+    # Check if the column exists in the DataFrame
+    if column not in data.columns:
+        print(f"Column '{column}' not found in the DataFrame.")
+        return
+    
+    # Filter out any extreme outliers if needed (optional)
+    # For example, we could define outliers as anything below -1000 or above 10000
+    filtered_data = data[(data[column] >= -10000) & (data[column] <= 10000)]
+    
+    plt.figure(figsize=(10, 6))
+    
+    # Create the histogram with KDE
+    sns.histplot(filtered_data[column], bins=50, kde=True)  # KDE adds a smooth curve
+    
+    # Set x and y limits for better visibility
+    plt.xlim(filtered_data[column].min() - 1000, filtered_data[column].max() + 1000)
+    plt.ylim(0, filtered_data[column].count() // 10)  # Set y limit based on the count divided by 10 for better spacing
+    
+    plt.title(f'Distribution of {column} (filtered to show values between -10000 and 10000)')
+    plt.xlabel(column)
+    plt.ylabel('Frequency')
+    plt.grid(True)  # Adding grid for better readability
+    plt.axvline(0, color='red', linestyle='--')  # Add a vertical line at 0 for reference
     plt.show()
 
 # Distribution of categorical features
