@@ -75,8 +75,26 @@ def missing_values(data):
     missing_percentage = (missing_values / len(data)) * 100
     print(missing_percentage)
 
-# Outlier detection using boxplot
+# Outlier Detection (Vertical)
 def boxplot_outliers(data, column):
-    sns.boxplot(x=data[column])
-    plt.title(f'Boxplot of {column}')
+    if column not in data.columns:
+        print(f"Column '{column}' not found in the DataFrame.")
+        return
+    
+    plt.figure(figsize=(10, 6))
+
+    # Create a vertical boxplot
+    sns.boxplot(y=data[column])
+
+    # Title and labels with larger font sizes
+    plt.title(f'Boxplot of {column}', fontsize=16)
+    plt.ylabel(column, fontsize=14)  # Label for the y-axis
+    plt.xlabel('Value', fontsize=14)  # Label for the x-axis
+
+    # Set y-ticks explicitly based on the range of data
+    y_ticks = range(int(data[column].min()), int(data[column].max()) + 1, 1000)  # Customize step as needed
+    plt.yticks(ticks=y_ticks, fontsize=12)
+
+    plt.grid(True)  # Add grid for better visibility
+    plt.xticks([])  # Remove x-ticks to focus on y-axis
     plt.show()
