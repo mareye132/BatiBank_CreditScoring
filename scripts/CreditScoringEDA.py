@@ -9,8 +9,8 @@ data = pd.read_csv('C:/Users/user/Desktop/Github/BatiBank_CreditScoring/data/dat
 # Overview of the data
 def data_overview(data):
     print(data.info())
-    print(data.describe())
-    print(data.head())
+    #print(data.describe())
+    #print(data.head())
 
 # Summary statistics for numerical columns
 def summary_statistics(data):
@@ -25,8 +25,8 @@ def plot_numerical_distribution(data, column):
         return
     
     # Filter out any extreme outliers if needed (optional)
-    # For example, we could define outliers as anything below -1000 or above 10000
-    filtered_data = data[(data[column] >= -10000) & (data[column] <= 10000)]
+    # For example, we could define outliers as anything below -10000 or above 100000
+    filtered_data = data[(data[column] >=-25000 ) & (data[column] <= 25000)]
     
     plt.figure(figsize=(10, 6))
     
@@ -37,7 +37,7 @@ def plot_numerical_distribution(data, column):
     plt.xlim(filtered_data[column].min() - 1000, filtered_data[column].max() + 1000)
     plt.ylim(0, filtered_data[column].count() // 10)  # Set y limit based on the count divided by 10 for better spacing
     
-    plt.title(f'Distribution of {column} (filtered to show values between -10000 and 10000)')
+    plt.title(f'Distribution of {column} (filtered to show values between -25000 and 25000)')
     plt.xlabel(column)
     plt.ylabel('Frequency')
     plt.grid(True)  # Adding grid for better readability
@@ -80,12 +80,3 @@ def boxplot_outliers(data, column):
     sns.boxplot(x=data[column])
     plt.title(f'Boxplot of {column}')
     plt.show()
-
-# Example Usage:
-# data_overview(data)
-# summary_statistics(data)
-# plot_numerical_distribution(data, 'Amount')
-# plot_categorical_distribution(data, 'ProductCategory')
-# correlation_matrix(data)
-# missing_values(data)
-# boxplot_outliers(data, 'Amount')
