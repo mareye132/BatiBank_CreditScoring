@@ -2,8 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
@@ -62,13 +61,15 @@ def evaluate_model(model, X_test, y_test):
 
 # Create a preprocessing and model pipeline
 def create_pipeline(model):
-    categorical_cols = ['Gender', 'MaritalStatus', 'EmploymentStatus']  # Example categorical columns
-    numeric_cols = ['Age', 'Income', 'CreditScore']  # Example numeric columns
+    # Updated with the actual categorical and numeric columns in the dataset
+    categorical_cols = ['CurrencyCode', 'CountryCode', 'ProviderId', 'ProductId', 'ProductCategory', 'ChannelId', 'PricingStrategy']
+    numeric_cols = ['Amount', 'Value']  # Numeric columns to scale
 
+    # Preprocessing for numeric and categorical features
     preprocessor = ColumnTransformer(
         transformers=[
             ('num', StandardScaler(), numeric_cols),  # Scale numeric features
-            ('cat', OneHotEncoder(), categorical_cols)  # One-Hot Encode categorical features
+            ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_cols)  # One-Hot Encode categorical features and ignore unknown categories
         ]
     )
     
@@ -76,6 +77,12 @@ def create_pipeline(model):
         ('preprocessor', preprocessor),
         ('classifier', model)
     ])
+
+    return Pipeline(steps=[
+        ('preprocessor', preprocessor),
+        ('classifier', model)
+    ])
+
 # Main function
 if __name__ == "__main__":
     # Load the data
